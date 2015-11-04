@@ -3,11 +3,11 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    ofSetFrameRate(24);
+//    ofSetFrameRate(1);
 
 
-//instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
-//    instagram.setCertFileLocation(ofToDataPath("ca-bundle.crt",false));
+instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
+    instagram.setCertFileLocation(ofToDataPath("ca-bundle.crt",false));
    
     imageHeight = 640;
     imageWidth = 640;
@@ -25,26 +25,30 @@ void ofApp::setup(){
     avgImage.setColor(ofColor(0));
     avgImage.update();
     
-//    fetchImages();
+    fetchImages();
     
-    sample1.loadImage("sample1.png");
-    sample2.loadImage("sample2.png");
-    sample3.loadImage("sample3.png");
-    sample4.loadImage("sample4.png");
-    sample5.loadImage("sample5.png");
-    sample6.loadImage("sample6.png");
+//    sample1.loadImage("sample1.png");
+//    sample2.loadImage("sample2.png");
+//    sample3.loadImage("sample3.png");
+//    sample4.loadImage("sample4.png");
+//    sample5.loadImage("sample5.png");
+//    sample6.loadImage("sample6.png");
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 //    updateImageAverage();
+
+//    if(!bImagesAlloc) {
+        // do the check
+        bImagesAlloc = imagesAllocated(images, startIndex, endIndex);
+//    }
+
+
+//    if(ofGetFrameNum() % 1000 == 0) {
+//        fetchImages();
+//    }
     
-//    sample2.getTextureReference().bind();
-
-
-
-//    sample2.getTextureReference().unbind();
-
 }
 
 
@@ -53,26 +57,48 @@ void ofApp::draw(){
     ofClear(0);
 //    avgImage.draw(0, 0);
 
-    glEnable(GL_EXT_texture_array);
+//    glEnable(GL_EXT_texture_array);
     
-    avgFbo.begin();
-        ofRect(0, 0, sample1.getWidth(), sample1.getHeight());
+    if (bImagesAlloc) {
 
-        avgShader.begin();
-//            avgShader.setUniformTexture("tex0", sample1.getTextureReference(), 0);
-            avgShader.setUniformTexture("tex1", sample2.getTextureReference(), 1);
-            avgShader.setUniformTexture("tex2", sample3.getTextureReference(), 2);
-            avgShader.setUniformTexture("tex3", sample4.getTextureReference(), 3);
-            avgShader.setUniformTexture("tex4", sample5.getTextureReference(), 4);
-            avgShader.setUniformTexture("tex5", sample6.getTextureReference(), 5);
-            sample1.draw(0,0);
-        avgShader.end();
-    avgFbo.end();
-    
-    
-    avgFbo.draw(0,0);
+         avgFbo.begin();
+            ofRect(0, 0, imageWidth, imageHeight);
 
-//    sample2.draw(0, 0);
+            avgShader.begin();
+        
+                 for(int j=0; j < totalImages; j++) {
+                    string name = "tex"+ofToString(j+1);
+                    int index = startIndex+j+1;
+                    
+                    cout << images[index].getWidth() << "," << images[index].getHeight() << endl;
+                    
+//                    cout << name << ", " << index << endl;
+                    avgShader.setUniformTexture(name, images[index].getTextureReference(), j+1);
+                  }
+    //            avgShader.setUniformTexture("tex0", sample1.getTextureReference(), 0);
+    //            avgShader.setUniformTexture("tex1", sample2.getTextureReference(), 1);
+    //            avgShader.setUniformTexture("tex2", sample3.getTextureReference(), 2);
+    //            avgShader.setUniformTexture("tex3", sample4.getTextureReference(), 3);
+    //            avgShader.setUniformTexture("tex4", sample5.getTextureReference(), 4);
+    //            avgShader.setUniformTexture("tex5", sample6.getTextureReference(), 5);
+                images[startIndex].draw(0,0);
+            avgShader.end();
+        avgFbo.end();
+       
+        
+        avgFbo.draw(0,0);
+        
+        
+        startIndex++;
+        endIndex++;
+
+        if(endIndex >= images.size()-1) {
+            startIndex = 0;
+            endIndex = totalImages;
+        }
+    }
+    
+
 }
 
 //--------------------------------------------------------------
@@ -151,6 +177,7 @@ void ofApp::fetchImages() {
         }
     }
 
+    cout << "images fetched!" << endl;
 }
 
 bool ofApp::imagesAllocated(deque<ofImage>& images, int start, int end){
@@ -160,7 +187,7 @@ bool ofApp::imagesAllocated(deque<ofImage>& images, int start, int end){
         alloc = true;
         // counting down -- just a guess but maybe
         // tha later ones in the array will load last?
-        for(int i=start; i<end; i++) {
+        for(int i=end-1; i>=start; i--) {
             // if we find an image that isn't allocated,
             // set to false and break out of the loop
             if(!images[i].isAllocated()) {
@@ -169,9 +196,16 @@ bool ofApp::imagesAllocated(deque<ofImage>& images, int start, int end){
             }
             
             if(images[i].getWidth() < imageWidth || images[i].getHeight() < imageHeight) {
+                cout << "resize img" << endl;
                 images[i].resize(imageWidth, imageHeight);
+                cout << images[i].getWidth() << "," << images[i].getHeight() << endl;
+               
             }
         }
+    }
+    
+    if(alloc) {
+        cout << "images allocated!";
     }
     
     return alloc;

@@ -11,20 +11,42 @@ uniform sampler2DRect tex2;
 uniform sampler2DRect tex3;
 uniform sampler2DRect tex4;
 uniform sampler2DRect tex5;
+uniform sampler2DRect tex6;
+uniform sampler2DRect tex7;
+uniform sampler2DRect tex8;
+uniform sampler2DRect tex9;
+
 varying vec2 texCoordVarying;
 
 void main()
 {
 
-
-    vec4 avg;
+    int n = 10;
+    vec4 avg = vec4(0.0);
     
-    avg += texture2DRect(tex0, texCoordVarying);
+//    avg = mix(texture2DRect(tex0, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex1, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex2, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex3, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex4, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex5, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex6, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex7, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex8, texCoordVarying), avg, 1.0/n);
+//    avg = mix(texture2DRect(tex9, texCoordVarying), avg, 1.0/n);
+    
+    avg = texture2DRect(tex0, texCoordVarying);
     avg += texture2DRect(tex1, texCoordVarying);
     avg += texture2DRect(tex2, texCoordVarying);
     avg += texture2DRect(tex3, texCoordVarying);
     avg += texture2DRect(tex4, texCoordVarying);
     avg += texture2DRect(tex5, texCoordVarying);
+    avg += texture2DRect(tex6, texCoordVarying);
+    avg += texture2DRect(tex7, texCoordVarying);
+    avg += texture2DRect(tex8, texCoordVarying);
+    avg += texture2DRect(tex9, texCoordVarying);
+    avg = avg / n;
+
     
-    gl_FragColor = avg/6;
+    gl_FragColor = vec4(avg.rgb, 1.0);
 }
