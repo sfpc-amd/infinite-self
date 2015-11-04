@@ -16,13 +16,22 @@ uniform sampler2DRect tex7;
 uniform sampler2DRect tex8;
 uniform sampler2DRect tex9;
 
+uniform float dMultiply;
+
 varying vec2 texCoordVarying;
+
+
+
+vec2 updateSt(in vec2 st, in vec4 last, in float amount) {
+    return(st + vec2( (last.x - 0.5) * amount, (last.z - 0.5) * amount));
+}
 
 void main()
 {
 
     int n = 10;
     vec4 avg = vec4(0.0);
+    vec2 st = texCoordVarying.st;
     
 //    avg = mix(texture2DRect(tex0, texCoordVarying), avg, 1.0/n);
 //    avg = mix(texture2DRect(tex1, texCoordVarying), avg, 1.0/n);
@@ -34,17 +43,42 @@ void main()
 //    avg = mix(texture2DRect(tex7, texCoordVarying), avg, 1.0/n);
 //    avg = mix(texture2DRect(tex8, texCoordVarying), avg, 1.0/n);
 //    avg = mix(texture2DRect(tex9, texCoordVarying), avg, 1.0/n);
+
+//    vec4 color = texture2DRect(tex0, st);
+//    vec2 st2 = st + vec2( (color.x - 0.5) * 5.0, (color.z - 0.5) * 5.0);
+
+
+    vec4 texel0 = texture2DRect(tex0, st);
+    st = updateSt(st, texel0, 1.0*dMultiply);
+    vec4 texel1 = texture2DRect(tex1, st);
+    st = updateSt(st, texel1, 2.0*dMultiply);
+    vec4 texel2 = texture2DRect(tex2, st);
+    st = updateSt(st, texel2, 3.0*dMultiply);
+    vec4 texel3 = texture2DRect(tex3, st);
+    st = updateSt(st, texel3, 4.0*dMultiply);
+    vec4 texel4 = texture2DRect(tex4, st);
+    st = updateSt(st, texel4, 5.0*dMultiply);
+    vec4 texel5 = texture2DRect(tex5, st);
+    st = updateSt(st, texel5, 6.0*dMultiply);
+    vec4 texel6 = texture2DRect(tex6, st);
+    st = updateSt(st, texel6, 7.0*dMultiply);
+    vec4 texel7 = texture2DRect(tex7, st);
+    st = updateSt(st, texel7, 8.0*dMultiply);
+    vec4 texel8 = texture2DRect(tex8, st);
+    st = updateSt(st, texel8, 9.0*dMultiply);
+//    vec4 texel9 = texture2DRect(tex9, st);
     
-    avg = texture2DRect(tex0, texCoordVarying);
-    avg += texture2DRect(tex1, texCoordVarying);
-    avg += texture2DRect(tex2, texCoordVarying);
-    avg += texture2DRect(tex3, texCoordVarying);
-    avg += texture2DRect(tex4, texCoordVarying);
-    avg += texture2DRect(tex5, texCoordVarying);
-    avg += texture2DRect(tex6, texCoordVarying);
-    avg += texture2DRect(tex7, texCoordVarying);
-    avg += texture2DRect(tex8, texCoordVarying);
-    avg += texture2DRect(tex9, texCoordVarying);
+    
+    avg = texture2DRect(tex1, st);
+    avg += texture2DRect(tex1, st);
+    avg += texture2DRect(tex2, st);
+    avg += texture2DRect(tex3, st);
+    avg += texture2DRect(tex4, st);
+    avg += texture2DRect(tex5, st);
+    avg += texture2DRect(tex6, st);
+    avg += texture2DRect(tex7, st);
+    avg += texture2DRect(tex8, st);
+    avg += texture2DRect(tex9, st);
     avg = avg / n;
 
     

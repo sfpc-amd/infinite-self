@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-//    ofSetFrameRate(1);
+    ofSetFrameRate(30);
 
 
 instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
@@ -66,6 +66,8 @@ void ofApp::draw(){
 
             avgShader.begin();
         
+                avgShader.setUniform1f("dMultiply", 0.3);// ofMap(mouseY, 0, ofGetHeight(), 0.0, 10.0));
+        
                  for(int j=0; j < totalImages; j++) {
                     string name = "tex"+ofToString(j+1);
                     int index = startIndex+j+1;
@@ -75,12 +77,7 @@ void ofApp::draw(){
 //                    cout << name << ", " << index << endl;
                     avgShader.setUniformTexture(name, images[index].getTextureReference(), j+1);
                   }
-    //            avgShader.setUniformTexture("tex0", sample1.getTextureReference(), 0);
-    //            avgShader.setUniformTexture("tex1", sample2.getTextureReference(), 1);
-    //            avgShader.setUniformTexture("tex2", sample3.getTextureReference(), 2);
-    //            avgShader.setUniformTexture("tex3", sample4.getTextureReference(), 3);
-    //            avgShader.setUniformTexture("tex4", sample5.getTextureReference(), 4);
-    //            avgShader.setUniformTexture("tex5", sample6.getTextureReference(), 5);
+
                 images[startIndex].draw(0,0);
             avgShader.end();
         avgFbo.end();
@@ -165,9 +162,26 @@ void ofApp::updateImageAverage() {
 
 void ofApp::fetchImages() {
 
-    images.clear();
-    instagram.getListOfTaggedObjectsNormal("selfie", 50);
+    int maxCount = 100;
     
+
+    images.clear();
+    instagram.getListOfTaggedObjectsNormal("selfie", 30);
+    paginationIds.push_back(instagram.getMaxIdForPagination());
+    updateImages();
+
+
+//    while(instagram.getImageURL().size() < maxCount && paginationIds.size()) {
+        instagram.getListOfTaggedObjectsPagination("selfie", 30,paginationIds.back());
+        updateImages();
+        paginationIds.push_back(instagram.getMaxIdForPagination());
+        
+//    }
+
+    cout << "images fetched! " << instagram.getImageURL().size() << endl;
+}
+
+void ofApp::updateImages() {
     if (!instagram.getImageURL().empty())
     {
         images.resize(instagram.getImageURL().size());
@@ -176,8 +190,6 @@ void ofApp::fetchImages() {
             getImages.loadFromURL(images[i], instagram.getImageURL()[i]);
         }
     }
-
-    cout << "images fetched!" << endl;
 }
 
 bool ofApp::imagesAllocated(deque<ofImage>& images, int start, int end){

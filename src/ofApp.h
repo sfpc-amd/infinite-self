@@ -17,6 +17,7 @@ class ofApp : public ofBaseApp{
     
         void updateImageAverage();
         void fetchImages();
+        void updateImages();
         bool imagesAllocated(deque<ofImage>& images, int start, int end);
 
 		void keyPressed(int key);
@@ -30,7 +31,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         ofxInstagram instagram;
-    
+        vector<string> paginationIds;
+        
         float imageHeight;
         float imageWidth;
         int imageSize;
@@ -46,12 +48,7 @@ class ofApp : public ofBaseApp{
     
         ofxAutoReloadedShader avgShader;
         ofFbo avgFbo;
-        ofImage sample1;
-        ofImage sample2;
-        ofImage sample3;
-        ofImage sample4;
-        ofImage sample5;
-        ofImage sample6;
+    
     
     private:
         int startIndex;
