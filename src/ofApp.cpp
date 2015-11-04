@@ -1,0 +1,224 @@
+#include "ofApp.h"
+
+//--------------------------------------------------------------
+void ofApp::setup(){
+
+    ofSetFrameRate(24);
+
+
+//instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
+//    instagram.setCertFileLocation(ofToDataPath("ca-bundle.crt",false));
+   
+    imageHeight = 640;
+    imageWidth = 640;
+    imageSize = imageWidth*imageHeight*3;
+    
+    totalImages = 10;
+    startIndex = 0;
+    endIndex = totalImages;
+    
+    bImagesAlloc = false;
+    
+    avgShader.load("shaders/avg");
+    
+    avgImage.allocate(imageWidth, imageHeight, OF_IMAGE_COLOR);
+    avgImage.setColor(ofColor(0));
+    avgImage.update();
+    
+//    fetchImages();
+    
+    sample1.loadImage("sample1.png");
+    sample2.loadImage("sample2.png");
+    sample3.loadImage("sample3.png");
+    sample4.loadImage("sample4.png");
+    sample5.loadImage("sample5.png");
+    sample6.loadImage("sample6.png");
+}
+
+//--------------------------------------------------------------
+void ofApp::update(){
+//    updateImageAverage();
+    
+//    sample2.getTextureReference().bind();
+
+
+
+//    sample2.getTextureReference().unbind();
+
+}
+
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+    ofClear(0);
+//    avgImage.draw(0, 0);
+
+    glEnable(GL_EXT_texture_array);
+    
+    avgFbo.begin();
+        ofRect(0, 0, sample1.getWidth(), sample1.getHeight());
+
+        avgShader.begin();
+//            avgShader.setUniformTexture("tex0", sample1.getTextureReference(), 0);
+            avgShader.setUniformTexture("tex1", sample2.getTextureReference(), 1);
+            avgShader.setUniformTexture("tex2", sample3.getTextureReference(), 2);
+            avgShader.setUniformTexture("tex3", sample4.getTextureReference(), 3);
+            avgShader.setUniformTexture("tex4", sample5.getTextureReference(), 4);
+            avgShader.setUniformTexture("tex5", sample6.getTextureReference(), 5);
+            sample1.draw(0,0);
+        avgShader.end();
+    avgFbo.end();
+    
+    
+    avgFbo.draw(0,0);
+
+//    sample2.draw(0, 0);
+}
+
+//--------------------------------------------------------------
+void ofApp::exit()
+{
+    getImages.stopThread();
+}
+
+void ofApp::updateImageAverage() {
+    if(!images.empty()) {
+        // ignore if images are already allocated
+        if(!bImagesAlloc) {
+            // do the check
+            bImagesAlloc = imagesAllocated(images, startIndex, endIndex);
+        }
+
+        // if allocated, go ahead
+        if (bImagesAlloc) {
+            
+            // get the pixels from our source image
+            unsigned char * pixels = avgImage.getPixels();
+            // get the number of pixels in our source image
+            // store our averaged pixel values
+            int avg;
+
+            for(int i = 0; i < imageSize; i++) {
+                avg = 0;
+                
+                for(int j=startIndex; j < endIndex; j++) {
+                    avg += images[j].getPixels()[i];
+                }
+                
+                avg = floor(avg / images.size());
+                pixels[i] = avg;
+            }
+
+            avgImage.update();
+
+
+            // http://opencv-users.1802565.n2.nabble.com/How-to-calculate-the-average-pixel-by-pixel-of-n-images-td2613763.html
+            
+//            cv::Mat img;
+//            cv::Mat sum;
+//            cv::Mat avg = ofxCv::toCv(avgImage);
+//            ofxCv::imitate(avg, img);
+//            for(int j=startIndex; j < endIndex; j++) {
+//                img = ofxCv::toCv(images[j]);
+//                cv::accumulate(img, sum);
+//            }
+//            ofxCv::copy(sum, avg);
+            
+         }
+        
+         startIndex++;
+         endIndex++;
+        
+         if(endIndex >= images.size()-1) {
+            startIndex = 0;
+            endIndex = totalImages;
+         }
+
+    }
+}
+
+void ofApp::fetchImages() {
+
+    images.clear();
+    instagram.getListOfTaggedObjectsNormal("selfie", 50);
+    
+    if (!instagram.getImageURL().empty())
+    {
+        images.resize(instagram.getImageURL().size());
+        for ( int i = 0; i < instagram.getImageURL().size(); i++)
+        {
+            getImages.loadFromURL(images[i], instagram.getImageURL()[i]);
+        }
+    }
+
+}
+
+bool ofApp::imagesAllocated(deque<ofImage>& images, int start, int end){
+    bool alloc = false;
+    
+    if(!images.empty()) {
+        alloc = true;
+        // counting down -- just a guess but maybe
+        // tha later ones in the array will load last?
+        for(int i=start; i<end; i++) {
+            // if we find an image that isn't allocated,
+            // set to false and break out of the loop
+            if(!images[i].isAllocated()) {
+                alloc = false;
+                break;
+            }
+            
+            if(images[i].getWidth() < imageWidth || images[i].getHeight() < imageHeight) {
+                images[i].resize(imageWidth, imageHeight);
+            }
+        }
+    }
+    
+    return alloc;
+}
+
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseDragged(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
+
+}

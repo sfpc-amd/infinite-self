@@ -1,0 +1,5 @@
+ofxGui
+ofxOpenCv
+ofxCv
+ofxFaceTracker
+ofxInstagram
