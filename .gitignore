@@ -1,8 +1,8 @@
 # project-specific ignore patterns
 bin/data/*.jpg
 bin/data/*.png
-bin/data/images
-
+bin/data/img
+node_modules
 
 # OF-specific ignore patterns
 

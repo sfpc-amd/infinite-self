@@ -1,11 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxInstagram.h"
-#include "ofxThreadedImageLoader.h"
-#include "ofxCv.h"
 #include "ofxAutoReloadedShader.h"
-//#include "ofxFaceTrackerThreaded.h"
 #include "ofxGui.h"
 
 
@@ -17,10 +13,7 @@ class ofApp : public ofBaseApp{
 		void draw();
         void exit();
     
-        void updateImageAverage();
-        void fetchImages();
-        void updateImages();
-        bool imagesAllocated(deque<ofImage>& images, int start, int end);
+        void loadImages();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -32,29 +25,21 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        ofxInstagram instagram;
-        vector<string> paginationIds;
+        string imagesDir;
     
-    
-//        ofVideoGrabber cam;
-//        ofxFaceTrackerThreaded tracker;
-//        ofMatrix4x4 orientationMatrix;
 
         ofxPanel gui;
         ofxFloatSlider dMultiply;
     
         float imageHeight;
         float imageWidth;
-        int imageSize;
-    
         int totalImages;
 
         bool bDrawGui;
-        bool bImagesAlloc;
+        bool bImagesLoaded;
+        bool bImagesStartLoading;
     
-        ofxThreadedImageLoader getImages;
         deque<ofImage> images;
-        ofImage avgImage;
     
         ofxAutoReloadedShader avgShader;
         ofFbo avgFbo;
