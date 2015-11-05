@@ -3,8 +3,10 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    ofSetFrameRate(30);
-
+	ofSetFrameRate(60);
+	ofSetVerticalSync(true);
+    ofEnableSmoothing();
+    ofSetLogLevel(OF_LOG_VERBOSE);
 
 instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
     instagram.setCertFileLocation(ofToDataPath("ca-bundle.crt",false));
@@ -27,6 +29,14 @@ instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
     
     fetchImages();
     
+    bDrawGui = true;
+    gui.setup();
+    gui.add(dMultiply.setup("Displacement", 0.3, 0.0, 10.0));
+
+//	cam.initGrabber(640, 480);
+//	tracker.setup();
+
+    
 //    sample1.loadImage("sample1.png");
 //    sample2.loadImage("sample2.png");
 //    sample3.loadImage("sample3.png");
@@ -37,6 +47,29 @@ instagram.setup("1700247.32b0b80.919c867a6b794dde8400a32d87339ba5","self");
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+//    cam.update();
+//    
+//	if(cam.isFrameNew()) {
+//		tracker.update(ofxCv::toCv(cam));
+//        ofVec3f orientation = tracker.getOrientation();
+//        ofVec3f euler = ofVec3f(
+//            orientation.x
+//            , orientation.y
+//            , orientation.z
+//        );
+//        orientationMatrix.makeRotationMatrix(
+//            ofRadToDeg(euler.x)
+//            , ofVec3f(1,0,0)
+//            , ofRadToDeg(euler.y)
+//            , ofVec3f(0,1,0)
+//            , ofRadToDeg(euler.z)
+//            , ofVec3f(0,0,1)
+//        );
+//	}
+
+
+    
 //    updateImageAverage();
 
 //    if(!bImagesAlloc) {
@@ -46,6 +79,7 @@ void ofApp::update(){
 
 
 //    if(ofGetFrameNum() % 1000 == 0) {
+//        bImagesAlloc = false;
 //        fetchImages();
 //    }
     
@@ -61,12 +95,22 @@ void ofApp::draw(){
     
     if (bImagesAlloc) {
 
+        ofPushMatrix();
          avgFbo.begin();
-            ofRect(0, 0, imageWidth, imageHeight);
+        
+//            float centerLeft = ofGetWidth()/2-(imageWidth/2);
+//            float centerTop = ofGetHeight()/2-(imageHeight/2), imageWidth, imageHeight;
+        
+        
+            ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
+//            ofxCv::applyMatrix(orientationMatrix);
+
+        
+            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
 
             avgShader.begin();
         
-                avgShader.setUniform1f("dMultiply", 0.3);// ofMap(mouseY, 0, ofGetHeight(), 0.0, 10.0));
+                avgShader.setUniform1f("dMultiply", dMultiply);// ofMap(mouseY, 0, ofGetHeight(), 0.0, 10.0));
         
                  for(int j=0; j < totalImages; j++) {
                     string name = "tex"+ofToString(j+1);
@@ -78,13 +122,13 @@ void ofApp::draw(){
                     avgShader.setUniformTexture(name, images[index].getTextureReference(), j+1);
                   }
 
-                images[startIndex].draw(0,0);
+                images[startIndex].draw(-imageWidth/2, -imageHeight/2);
             avgShader.end();
         avgFbo.end();
        
         
-        avgFbo.draw(0,0);
-        
+        avgFbo.draw(-imageWidth/2, -imageHeight/2);
+        ofPopMatrix();
         
         startIndex++;
         endIndex++;
@@ -95,13 +139,16 @@ void ofApp::draw(){
         }
     }
     
-
+    if(bDrawGui) {
+        gui.draw();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::exit()
 {
     getImages.stopThread();
+//    tracker.waitForThread();
 }
 
 void ofApp::updateImageAverage() {
@@ -166,16 +213,16 @@ void ofApp::fetchImages() {
     
 
     images.clear();
-    instagram.getListOfTaggedObjectsNormal("selfie", 30);
+    instagram.getListOfTaggedObjectsNormal("selfie", 50);
     paginationIds.push_back(instagram.getMaxIdForPagination());
     updateImages();
 
 
 //    while(instagram.getImageURL().size() < maxCount && paginationIds.size()) {
-        instagram.getListOfTaggedObjectsPagination("selfie", 30,paginationIds.back());
-        updateImages();
-        paginationIds.push_back(instagram.getMaxIdForPagination());
-        
+//        instagram.getListOfTaggedObjectsPagination("selfie", 30,paginationIds.back());
+//        updateImages();
+//        paginationIds.push_back(instagram.getMaxIdForPagination());
+    
 //    }
 
     cout << "images fetched! " << instagram.getImageURL().size() << endl;
@@ -226,7 +273,11 @@ bool ofApp::imagesAllocated(deque<ofImage>& images, int start, int end){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if(key == 'f') {
+        ofToggleFullscreen();
+    } else if (key == 'g') {
+        bDrawGui = !bDrawGui;
+    }
 }
 
 //--------------------------------------------------------------

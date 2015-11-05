@@ -3,8 +3,10 @@
 #include "ofMain.h"
 #include "ofxInstagram.h"
 #include "ofxThreadedImageLoader.h"
-//#include "ofxCv.h"
+#include "ofxCv.h"
 #include "ofxAutoReloadedShader.h"
+//#include "ofxFaceTrackerThreaded.h"
+#include "ofxGui.h"
 
 
 class ofApp : public ofBaseApp{
@@ -32,14 +34,22 @@ class ofApp : public ofBaseApp{
     
         ofxInstagram instagram;
         vector<string> paginationIds;
-        
+    
+    
+//        ofVideoGrabber cam;
+//        ofxFaceTrackerThreaded tracker;
+//        ofMatrix4x4 orientationMatrix;
+
+        ofxPanel gui;
+        ofxFloatSlider dMultiply;
+    
         float imageHeight;
         float imageWidth;
         int imageSize;
     
         int totalImages;
 
-    
+        bool bDrawGui;
         bool bImagesAlloc;
     
         ofxThreadedImageLoader getImages;
