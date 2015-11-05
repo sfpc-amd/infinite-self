@@ -26,6 +26,9 @@ void ofApp::setup(){
     bDrawGui = true;
     gui.setup();
     gui.add(dMultiply.setup("Displacement", 0.3, 0.0, 10.0));
+    
+    cam.initGrabber(640, 480);
+    tracker.setup();
 
 }
 
@@ -33,7 +36,17 @@ void ofApp::setup(){
 void ofApp::update(){
     if(!bImagesLoaded && !bImagesStartLoading) {
         loadImages();
+    } else {
+        cam.update();
+        if(cam.isFrameNew()) {
+            tracker.update(ofxCv::toCv(cam));
+            position = tracker.getPosition();
+            scale = tracker.getScale();
+            orientation = tracker.getOrientation();
+            rotationMatrix = tracker.getRotationMatrix();
+        }
     }
+    
 }
 
 
@@ -46,29 +59,44 @@ void ofApp::draw(){
          avgFbo.begin();
         
 
-            ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
 
+            ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
         
-            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+            if(tracker.getFound()) {
+                ofxCv::applyMatrix(rotationMatrix);
+            }
+        
+//            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+
+//            if(tracker.getFound()) {
+//                tracker.getObjectMesh().draw();
+//            }
 
             avgShader.begin();
         
                 avgShader.setUniform1f("dMultiply", dMultiply);// ofMap(mouseY, 0, ofGetHeight(), 0.0, 10.0));
         
-                 for(int j=0; j < totalImages; j++) {
-                    string name = "tex"+ofToString(j+1);
+                 for(int j=0; j < totalImages+1; j++) {
+                    string name = "tex"+ofToString(j);
                     int index = startIndex+j+1;
                     
-                    avgShader.setUniformTexture(name, images[index].getTextureReference(), j+1);
+                    avgShader.setUniformTexture(name, images[index].getTextureReference(), j);
                   }
 
-                images[startIndex].draw(-imageWidth/2, -imageHeight/2);
+//                images[startIndex].draw(-imageWidth/2, -imageHeight/2);
+                if(tracker.getFound()) {
+                    ofScale(7.0, 7.0, 7.0);
+                    tracker.getObjectMesh().draw();
+                } else {
+                    ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+                }
             avgShader.end();
         avgFbo.end();
        
         
         avgFbo.draw(-imageWidth/2, -imageHeight/2);
         ofPopMatrix();
+
         
         startIndex++;
         endIndex++;
@@ -88,8 +116,8 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::exit()
-{
+void ofApp::exit() {
+    tracker.waitForThread();
 }
 
 void ofApp::loadImages() {

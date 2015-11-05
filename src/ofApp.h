@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "ofxAutoReloadedShader.h"
 #include "ofxGui.h"
+#include "ofxCv.h"
+#include "ofxFaceTrackerThreaded.h"
 
 
 class ofApp : public ofBaseApp{
@@ -27,6 +29,15 @@ class ofApp : public ofBaseApp{
     
         string imagesDir;
     
+        ofVideoGrabber cam;
+        ofxFaceTrackerThreaded tracker;
+        ofVec2f position;
+        float scale;
+        ofVec3f orientation;
+        ofMatrix4x4 rotationMatrix;
+        
+        ofxCv::Mat translation, rotation;
+        ofMatrix4x4 pose;
 
         ofxPanel gui;
         ofxFloatSlider dMultiply;
