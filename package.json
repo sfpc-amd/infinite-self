@@ -1,15 +1,16 @@
 {
   "name": "infiniteSelf",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Andy Dayton",
+  "license": "MIT",
   "dependencies": {
     "request": "~2.65.0",
-    "q": "~1.4.1"
+    "q": "~1.4.1",
+    "instagram": "0.0.4"
   }
 }
