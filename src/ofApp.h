@@ -5,7 +5,6 @@
 #include "ofxThreadedImageLoader.h"
 #include "ofxCv.h"
 #include "ofxAutoReloadedShader.h"
-//#include "ofxFaceTrackerThreaded.h"
 #include "ofxGui.h"
 
 
@@ -17,7 +16,7 @@ class ofApp : public ofBaseApp{
 		void draw();
         void exit();
     
-        void updateImageAverage();
+        void loadImages();
         void fetchImages();
         void updateImages();
         bool imagesAllocated(deque<ofImage>& images, int start, int end);
@@ -31,6 +30,8 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+        string imagesDir;
     
         ofxInstagram instagram;
         vector<string> paginationIds;
