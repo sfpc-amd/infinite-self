@@ -2,7 +2,7 @@
 bin/data/*.jpg
 bin/data/*.png
 bin/data/img
-
+node_modules
 
 # OF-specific ignore patterns
 
