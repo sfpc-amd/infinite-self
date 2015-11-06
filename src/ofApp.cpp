@@ -57,7 +57,6 @@ void ofApp::draw(){
     if(bImagesLoaded) {
         ofPushMatrix();
          avgFbo.begin();
-        
 
 
             ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
@@ -84,17 +83,42 @@ void ofApp::draw(){
                   }
 
 //                images[startIndex].draw(-imageWidth/2, -imageHeight/2);
-                if(tracker.getFound()) {
-                    ofScale(7.0, 7.0, 7.0);
-                    tracker.getObjectMesh().draw();
-                } else {
-                    ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
-                }
+//                    if(tracker.getFound()) {
+//                        ofScale(7.0, 7.0, 7.0);
+//                        tracker.getObjectMesh().draw();
+//                    } else {
+                        ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+//                    }
             avgShader.end();
         avgFbo.end();
        
         
-        avgFbo.draw(-imageWidth/2, -imageHeight/2);
+//        avgFbo.draw(-imageWidth/2, -imageHeight/2);
+        
+//        avgFbo.getTextureReference().bind();
+        
+        ofPixels fboPixels;
+        ofImage image;
+        
+        fboPixels.allocate(imageWidth, imageHeight, 3);
+        
+        avgFbo.readToPixels(fboPixels);
+        image.setFromPixels(fboPixels);
+        
+        image.bind();
+        
+        if(tracker.getFound()) {
+            ofScale(7.0, 7.0, 7.0);
+            tracker.getObjectMesh().draw();
+        } else {
+            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+        }
+        
+        image.unbind();
+      
+//        avgFbo.getTextureReference().unbind();
+        
+        
         ofPopMatrix();
 
         
