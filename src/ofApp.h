@@ -27,7 +27,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        string imagesDir;
+        string imagesDirPath;
+        ofDirectory imagesDir;
     
         ofVideoGrabber cam;
         ofxFaceTrackerThreaded tracker;

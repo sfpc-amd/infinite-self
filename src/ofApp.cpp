@@ -9,14 +9,13 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofSetLogLevel(OF_LOG_NOTICE);
 
-    imagesDir = "img/";
+    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
 
     imageHeight = 640;
     imageWidth = 640;
     totalImages = 10;
     startIndex = 0;
     endIndex = totalImages;
-    
     
     avgShader.load("shaders/avg");
     
@@ -29,6 +28,9 @@ void ofApp::setup(){
     
     cam.initGrabber(640, 480);
     tracker.setup();
+
+    imagesDir.open(imagesDirPath);
+    imagesDir.allowExt("jpg");
 
 }
 
@@ -65,12 +67,6 @@ void ofApp::draw(){
                 ofxCv::applyMatrix(rotationMatrix);
             }
         
-//            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
-
-//            if(tracker.getFound()) {
-//                tracker.getObjectMesh().draw();
-//            }
-
             avgShader.begin();
         
                 avgShader.setUniform1f("dMultiply", dMultiply);// ofMap(mouseY, 0, ofGetHeight(), 0.0, 10.0));
@@ -82,42 +78,33 @@ void ofApp::draw(){
                     avgShader.setUniformTexture(name, images[index].getTextureReference(), j);
                   }
 
-//                images[startIndex].draw(-imageWidth/2, -imageHeight/2);
-//                    if(tracker.getFound()) {
-//                        ofScale(7.0, 7.0, 7.0);
-//                        tracker.getObjectMesh().draw();
-//                    } else {
-                        ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
-//                    }
+    
+                ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+
             avgShader.end();
         avgFbo.end();
        
+//        ofPixels fboPixels;
+//        ofImage image;
+//        
+//        fboPixels.allocate(imageWidth, imageHeight, 3);
+//        
+//        avgFbo.readToPixels(fboPixels);
+//        image.setFromPixels(fboPixels);
+//        
+//        image.bind();
+//        
+//        if(tracker.getFound()) {
+//            ofScale(7.0, 7.0, 7.0);
+//            tracker.getObjectMesh().draw();
+//        } else {
+//            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
+//        }
+//        
+//        image.unbind();
+//        
         
-//        avgFbo.draw(-imageWidth/2, -imageHeight/2);
-        
-//        avgFbo.getTextureReference().bind();
-        
-        ofPixels fboPixels;
-        ofImage image;
-        
-        fboPixels.allocate(imageWidth, imageHeight, 3);
-        
-        avgFbo.readToPixels(fboPixels);
-        image.setFromPixels(fboPixels);
-        
-        image.bind();
-        
-        if(tracker.getFound()) {
-            ofScale(7.0, 7.0, 7.0);
-            tracker.getObjectMesh().draw();
-        } else {
-            ofRect(-imageWidth/2, -imageHeight/2, imageWidth, imageHeight);
-        }
-        
-        image.unbind();
-      
-//        avgFbo.getTextureReference().unbind();
-        
+        avgFbo.draw(0,0);
         
         ofPopMatrix();
 
@@ -148,14 +135,11 @@ void ofApp::loadImages() {
 
     bImagesStartLoading = true;
 
-    ofDirectory dir(imagesDir);
-    dir.allowExt("jpg");
-    dir.listDir();
+    imagesDir.listDir();
+    images.resize(imagesDir.numFiles());
     
-    images.resize(dir.numFiles());
-    
-    for(int i = 0; i < dir.numFiles(); i++){
-        images[i].loadImage(dir.getPath(i));
+    for(int i = 0; i < imagesDir.numFiles(); i++){
+        images[i].loadImage(imagesDir.getPath(i));
         if(images[i].getWidth() < imageWidth || images[i].getHeight() < imageHeight) {
             images[i].resize(imageWidth, imageHeight);
            
