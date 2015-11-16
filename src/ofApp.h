@@ -6,6 +6,8 @@
 #include "ofxCv.h"
 #include "ofxFaceTrackerThreaded.h"
 
+#include "Clone.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -14,6 +16,7 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
         void exit();
+    
     
         void loadImages();
 
@@ -26,6 +29,14 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+        vector<ofVec2f> getSrcPoints();
+    
+        Clone clone;
+        bool cloneReady;
+        vector<ofVec2f> srcPoints;
+        ofFbo srcFbo, maskFbo;
+
     
         string imagesDirPath;
         ofDirectory imagesDir;
@@ -42,6 +53,7 @@ class ofApp : public ofBaseApp{
 
         ofxPanel gui;
         ofxFloatSlider dMultiply;
+        ofxIntSlider cloneStrength;
     
         float imageHeight;
         float imageWidth;

@@ -35,6 +35,7 @@
 		B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 802251BAF1B35B1D67B32FD0 /* ofxSliderGroup.cpp */; };
 		B6840996567E78436F7ECFAB /* ETF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B047FF96258DC01792B272DB /* ETF.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		C12B2A711BFA4EE700D12D27 /* Clone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C12B2A6F1BFA4EE700D12D27 /* Clone.cpp */; };
 		C1605BF01BE98C9F0041AFB2 /* ofxJSONElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1605BE61BE98C9F0041AFB2 /* ofxJSONElement.cpp */; };
 		C1605BF11BE98C9F0041AFB2 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1605BEF1BE98C9F0041AFB2 /* jsoncpp.cpp */; };
 		C1605BF61BE98CC60041AFB2 /* ofxThreadedImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1605BF41BE98CC60041AFB2 /* ofxThreadedImageLoader.cpp */; };
@@ -226,6 +227,8 @@
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		BC378899A000AA03D8319C6D /* ofxFaceTrackerThreaded.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxFaceTrackerThreaded.h; path = ../../../addons/ofxFaceTracker/src/ofxFaceTrackerThreaded.h; sourceTree = SOURCE_ROOT; };
 		BE9718AC2BA4516A804EE019 /* CLM.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = CLM.cc; path = ../../../addons/ofxFaceTracker/libs/FaceTracker/src/lib/CLM.cc; sourceTree = SOURCE_ROOT; };
+		C12B2A6F1BFA4EE700D12D27 /* Clone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clone.cpp; sourceTree = "<group>"; };
+		C12B2A701BFA4EE700D12D27 /* Clone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clone.h; sourceTree = "<group>"; };
 		C15C15771BEBF5440082F967 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
 		C1605BE51BE98C9F0041AFB2 /* ofxJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxJSON.h; sourceTree = "<group>"; };
 		C1605BE61BE98C9F0041AFB2 /* ofxJSONElement.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxJSONElement.cpp; sourceTree = "<group>"; };
@@ -1036,6 +1039,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				C12B2A6F1BFA4EE700D12D27 /* Clone.cpp */,
+				C12B2A701BFA4EE700D12D27 /* Clone.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1244,6 +1249,7 @@
 				4F02F4D92C36436C945A6716 /* Patch.cc in Sources */,
 				091CD626FECB03B3A6B3A1B2 /* PAW.cc in Sources */,
 				E6E21460246219EE9394310F /* PDM.cc in Sources */,
+				C12B2A711BFA4EE700D12D27 /* Clone.cpp in Sources */,
 				C1605BF01BE98C9F0041AFB2 /* ofxJSONElement.cpp in Sources */,
 				E43C5A4AB73C09290F70362D /* Tracker.cc in Sources */,
 				F74CF967AAEE9454BC751EBC /* ca-bundle.crt in Sources */,
