@@ -4,7 +4,9 @@
 #include "ofxAutoReloadedShader.h"
 #include "ofxGui.h"
 #include "ofxCv.h"
+#include "ofxFaceTracker.h"
 #include "ofxFaceTrackerThreaded.h"
+#include "ofxMacamPs3Eye.h"
 
 #include "Clone.h"
 
@@ -41,7 +43,7 @@ class ofApp : public ofBaseApp{
         string imagesDirPath;
         ofDirectory imagesDir;
     
-        ofVideoGrabber cam;
+        ofxMacamPs3Eye cam;
         ofxFaceTrackerThreaded tracker;
         ofVec2f position;
         float scale;
