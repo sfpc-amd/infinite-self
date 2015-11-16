@@ -9,14 +9,13 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofSetLogLevel(OF_LOG_NOTICE);
 
-    imagesDir = "img/";
+    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
 
     imageHeight = 640;
     imageWidth = 640;
     totalImages = 10;
     startIndex = 0;
     endIndex = totalImages;
-    
     
     avgShader.load("shaders/avg");
     
@@ -26,6 +25,11 @@ void ofApp::setup(){
     bDrawGui = true;
     gui.setup();
     gui.add(dMultiply.setup("Displacement", 0.3, 0.0, 10.0));
+    
+    cout << imagesDirPath << endl;
+    
+    imagesDir.open(imagesDirPath);
+    imagesDir.allowExt("jpg");
 
 }
 
@@ -96,14 +100,11 @@ void ofApp::loadImages() {
 
     bImagesStartLoading = true;
 
-    ofDirectory dir(imagesDir);
-    dir.allowExt("jpg");
-    dir.listDir();
+    imagesDir.listDir();
+    images.resize(imagesDir.numFiles());
     
-    images.resize(dir.numFiles());
-    
-    for(int i = 0; i < dir.numFiles(); i++){
-        images[i].loadImage(dir.getPath(i));
+    for(int i = 0; i < imagesDir.numFiles(); i++){
+        images[i].loadImage(imagesDir.getPath(i));
         if(images[i].getWidth() < imageWidth || images[i].getHeight() < imageHeight) {
             images[i].resize(imageWidth, imageHeight);
            
