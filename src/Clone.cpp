@@ -9,6 +9,9 @@ void Clone::setup(int width, int height) {
 	srcBlur.allocate(settings);
 	dstBlur.allocate(settings);
 	
+//    maskBlurShader.load("shaders/maskBlur");
+//	cloneShader.load("shaders/clone");
+    
 	maskBlurShader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shaders/maskBlur.frag");
 	cloneShader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shaders/clone.frag");
 	maskBlurShader.linkProgram();
@@ -52,7 +55,7 @@ void Clone::update(ofTexture& src, ofTexture& dst, ofTexture& mask) {
 	buffer.begin();
 	ofPushStyle();
 	ofEnableAlphaBlending();
-	dst.draw(0, 0);	
+	dst.draw(0, 0);
 	cloneShader.begin();
 	cloneShader.setUniformTexture("src", src, 1);
 	cloneShader.setUniformTexture("srcBlur", srcBlur, 2);

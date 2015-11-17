@@ -14,4 +14,4 @@ ${PREFIX}kylemcdonald/ofxFaceTracker.git
 
 ${PREFIX}andreasmuller/ofxAutoReloadedShader.git
 
-${PREFIX}paulobarcelos/ofxMacamPs3Eye.git
+${PREFIX}andyinabox/ofxMacamPs3Eye.git

@@ -35,8 +35,10 @@ void ofApp::setup(){
     #endif
     cam.initGrabber(640, 480);
     
-    camShader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shaders/cam.frag");
-    camShader.linkProgram();
+//    camShader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shaders/cam.frag");
+//    camShader.linkProgram();
+
+    camShader.load("shaders/cam");
    
     tracker.setup();
 	ofFbo::Settings settings;
@@ -65,7 +67,11 @@ void ofApp::update(){
         avgFbo.begin();
             avgShader.begin();
                 avgShader.setUniform1f("dMultiply", dMultiply);
-        
+                avgShader.setUniform2f("direction",
+                    ofMap(mouseX, 0, ofGetWidth(), -1, 1, true),
+                    ofMap(mouseY, 0, ofGetHeight(), -1, 1, true)
+                );
+
                  for(int j=0; j < totalImages; j++) {
                     string name = "tex"+ofToString(j+1);
                     int index = startIndex+j+1;
@@ -85,9 +91,25 @@ void ofApp::update(){
             cloneReady = tracker.getFound();
             
             if(cloneReady) {
-                ofMesh camMesh = tracker.getImageMesh();
-                camMesh.clearTexCoords();
-                camMesh.addTexCoords(srcPoints);
+                
+                if(!srcImageFound) {
+                    camFbo.begin();
+                        ofClear(0, 255);
+                        camShader.begin();
+                            camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
+                            cam.draw(0,0);
+                        camShader.end();
+                    camFbo.end();
+                    srcImageFound = true;
+                    
+                    camMesh = tracker.getImageMesh();
+                    camMesh.clearTexCoords();
+                    camMesh.addTexCoords(srcPoints);
+                }
+                
+//                ofMesh camMesh = tracker.getImageMesh();
+//                camMesh.clearTexCoords();
+//                camMesh.addTexCoords(srcPoints);
                 
                 maskFbo.begin();
                     ofClear(0, 255);
@@ -101,17 +123,19 @@ void ofApp::update(){
                     avgFbo.getTextureReference().unbind();
                 srcFbo.end();
 
-                camFbo.begin();
-                    ofClear(0, 255);
-                    camShader.begin();
-                        camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
-                        cam.draw(0,0);
-                    camShader.end();
-                camFbo.end();
+//                camFbo.begin();
+//                    ofClear(0, 255);
+//                    camShader.begin();
+//                        camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
+//                        cam.draw(0,0);
+//                    camShader.end();
+//                camFbo.end();
                 
                 clone.setStrength(cloneStrength);
                 clone.update(srcFbo.getTextureReference(), camFbo.getTextureReference(), maskFbo.getTextureReference());
                 
+            } else {
+                srcImageFound = false;
             }
         }
     }

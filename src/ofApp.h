@@ -45,6 +45,9 @@ class ofApp : public ofBaseApp{
     
         string imagesDirPath;
         ofDirectory imagesDir;
+        ofImage srcImage;
+        bool srcImageFound;
+        ofMesh camMesh;
     
         #ifdef USE_MACAM
             ofxMacamPs3Eye cam;
