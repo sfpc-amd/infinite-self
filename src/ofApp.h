@@ -41,8 +41,7 @@ class ofApp : public ofBaseApp{
         Clone clone;
         bool cloneReady;
         vector<ofVec2f> srcPoints;
-        ofFbo srcFbo, maskFbo;
-//        ofImage gray;
+        ofFbo srcFbo, maskFbo, camFbo;
     
         string imagesDirPath;
         ofDirectory imagesDir;
@@ -77,7 +76,7 @@ class ofApp : public ofBaseApp{
         deque<ofImage> images;
     
         ofxAutoReloadedShader avgShader;
-        ofxAutoReloadedShader srcShader;
+        ofxAutoReloadedShader camShader;
         ofFbo avgFbo;
     
     

@@ -20,6 +20,7 @@ void ofApp::setup(){
     avgShader.load("shaders/avg");
     avgFbo.allocate(imageHeight, imageWidth);
     
+    
     bImagesLoaded = false;
     bImagesStartLoading = false;
     
@@ -33,6 +34,9 @@ void ofApp::setup(){
         cam.setLed(false);
     #endif
     cam.initGrabber(640, 480);
+    
+    camShader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shaders/cam.frag");
+    camShader.linkProgram();
    
     tracker.setup();
 	ofFbo::Settings settings;
@@ -40,6 +44,7 @@ void ofApp::setup(){
 	settings.height = cam.getHeight();
 	maskFbo.allocate(settings);
 	srcFbo.allocate(settings);
+    camFbo.allocate(settings);
     clone.setup(cam.getWidth(), cam.getHeight());
 
     ofSetWindowShape(cam.getWidth(), cam.getHeight());
@@ -95,9 +100,17 @@ void ofApp::update(){
                     camMesh.draw();
                     avgFbo.getTextureReference().unbind();
                 srcFbo.end();
+
+                camFbo.begin();
+                    ofClear(0, 255);
+                    camShader.begin();
+                        camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
+                        cam.draw(0,0);
+                    camShader.end();
+                camFbo.end();
                 
                 clone.setStrength(cloneStrength);
-                clone.update(srcFbo.getTextureReference(), cam.getTextureReference(), maskFbo.getTextureReference());
+                clone.update(srcFbo.getTextureReference(), camFbo.getTextureReference(), maskFbo.getTextureReference());
                 
             }
         }
