@@ -6,10 +6,14 @@
 #include "ofxCv.h"
 #include "ofxFaceTracker.h"
 #include "ofxFaceTrackerThreaded.h"
-#include "ofxMacamPs3Eye.h"
 
 #include "Clone.h"
 
+//#define USE_MACAM
+
+#ifdef USE_MACAM
+#include "ofxMacamPs3Eye.h"
+#endif
 
 class ofApp : public ofBaseApp{
 
@@ -38,12 +42,17 @@ class ofApp : public ofBaseApp{
         bool cloneReady;
         vector<ofVec2f> srcPoints;
         ofFbo srcFbo, maskFbo;
-
+//        ofImage gray;
     
         string imagesDirPath;
         ofDirectory imagesDir;
     
-        ofxMacamPs3Eye cam;
+        #ifdef USE_MACAM
+            ofxMacamPs3Eye cam;
+        #else
+            ofVideoGrabber cam;
+        #endif
+    
         ofxFaceTrackerThreaded tracker;
         ofVec2f position;
         float scale;
@@ -68,6 +77,7 @@ class ofApp : public ofBaseApp{
         deque<ofImage> images;
     
         ofxAutoReloadedShader avgShader;
+        ofxAutoReloadedShader srcShader;
         ofFbo avgFbo;
     
     

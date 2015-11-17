@@ -1,6 +1,5 @@
 #include "ofApp.h"
 
-
 //--------------------------------------------------------------
 void ofApp::setup(){
 
@@ -9,7 +8,8 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofSetLogLevel(OF_LOG_NOTICE);
 
-    imagesDirPath = ofToDataPath("../../../sharedData/images/selfies-processed-cropped/", true);
+//    imagesDirPath = ofToDataPath("../../../sharedData/images/selfies-processed-cropped/", true);
+    imagesDirPath = "sampleImages/";
 
     imageHeight = 640;
     imageWidth = 640;
@@ -28,10 +28,12 @@ void ofApp::setup(){
     gui.add(dMultiply.setup("Displacement", 0.3, 0.0, 10.0));
     gui.add(cloneStrength.setup("Clone Strength", 16, 0, 50));
     
-    cam.setDesiredFrameRate(30);
+    #ifdef USE_MACAM
+        cam.setDesiredFrameRate(30);
+        cam.setLed(false);
+    #endif
     cam.initGrabber(640, 480);
-    cam.setLed(false);
-    
+   
     tracker.setup();
 	ofFbo::Settings settings;
 	settings.width = cam.getWidth();
@@ -94,7 +96,6 @@ void ofApp::update(){
                     avgFbo.getTextureReference().unbind();
                 srcFbo.end();
                 
-
                 clone.setStrength(cloneStrength);
                 clone.update(srcFbo.getTextureReference(), cam.getTextureReference(), maskFbo.getTextureReference());
                 
