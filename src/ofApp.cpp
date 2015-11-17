@@ -94,6 +94,7 @@ void ofApp::update(){
                     avgFbo.getTextureReference().unbind();
                 srcFbo.end();
                 
+
                 clone.setStrength(cloneStrength);
                 clone.update(srcFbo.getTextureReference(), cam.getTextureReference(), maskFbo.getTextureReference());
                 

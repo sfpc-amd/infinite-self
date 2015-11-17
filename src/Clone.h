@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxAutoReloadedShader.h"
 
 class Clone {
 public:
@@ -12,6 +13,6 @@ public:
 protected:
 	void maskedBlur(ofTexture& tex, ofTexture& mask, ofFbo& result);
 	ofFbo buffer, srcBlur, dstBlur;
-	ofShader maskBlurShader, cloneShader;
+	ofxAutoReloadedShader maskBlurShader, cloneShader;
 	int strength;
 };

@@ -57,6 +57,7 @@
 		C18C11481BFA9B900013DD03 /* Sensor.mm in Sources */ = {isa = PBXBuildFile; fileRef = C18C11351BFA9B900013DD03 /* Sensor.mm */; };
 		C18C11491BFA9B900013DD03 /* ofxMacamPs3Eye.mm in Sources */ = {isa = PBXBuildFile; fileRef = C18C11371BFA9B900013DD03 /* ofxMacamPs3Eye.mm */; };
 		C18C114A1BFA9B900013DD03 /* PS3EyeWindowAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = C18C11391BFA9B900013DD03 /* PS3EyeWindowAppDelegate.mm */; };
+		C18C114E1BFAA0CF0013DD03 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C18C114D1BFAA0CF0013DD03 /* README.md */; };
 		C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE75A3FBA2C2D87D14F06FE6 /* ObjectFinder.cpp */; };
 		D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */; };
 		DBCB84A37F9AECC254870D79 /* Wrappers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D347FB65D19015303863922A /* Wrappers.cpp */; };
@@ -295,6 +296,9 @@
 		C18C11371BFA9B900013DD03 /* ofxMacamPs3Eye.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxMacamPs3Eye.mm; sourceTree = "<group>"; };
 		C18C11381BFA9B900013DD03 /* PS3EyeWindowAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PS3EyeWindowAppDelegate.h; sourceTree = "<group>"; };
 		C18C11391BFA9B900013DD03 /* PS3EyeWindowAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PS3EyeWindowAppDelegate.mm; sourceTree = "<group>"; };
+		C18C114D1BFAA0CF0013DD03 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C18C114F1BFAA20C0013DD03 /* maskBlur.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = maskBlur.frag; sourceTree = "<group>"; };
+		C18C11501BFAA2580013DD03 /* clone.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = clone.frag; sourceTree = "<group>"; };
 		C1C56D20A1A57DC44096BFE7 /* ofxCvContourFinder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvContourFinder.h; path = ../../../addons/ofxOpenCv/src/ofxCvContourFinder.h; sourceTree = SOURCE_ROOT; };
 		C415F439B09BAEBA3FB3710F /* FCheck.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = FCheck.cc; path = ../../../addons/ofxFaceTracker/libs/FaceTracker/src/lib/FCheck.cc; sourceTree = SOURCE_ROOT; };
 		C4F6F873496C3527A28B87F4 /* ExpressionClassifier.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ExpressionClassifier.cpp; path = ../../../addons/ofxFaceTracker/src/ExpressionClassifier.cpp; sourceTree = SOURCE_ROOT; };
@@ -948,6 +952,8 @@
 			children = (
 				C1605BFD1BE99F950041AFB2 /* avg.frag */,
 				C1605C031BE9A35B0041AFB2 /* avg.vert */,
+				C18C114F1BFAA20C0013DD03 /* maskBlur.frag */,
+				C18C11501BFAA2580013DD03 /* clone.frag */,
 			);
 			path = shaders;
 			sourceTree = "<group>";
@@ -1141,6 +1147,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				C18C114D1BFAA0CF0013DD03 /* README.md */,
 				C15C15771BEBF5440082F967 /* VERSION */,
 				C1605BF91BE99F7D0041AFB2 /* data */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
@@ -1368,6 +1375,7 @@
 				C18C11401BFA9B900013DD03 /* LookUpTable.mm in Sources */,
 				A6668C5B1272D7FCD5B5A16F /* Utilities.cpp in Sources */,
 				C18C11451BFA9B900013DD03 /* MyCameraInfo.mm in Sources */,
+				C18C114E1BFAA0CF0013DD03 /* README.md in Sources */,
 				DBCB84A37F9AECC254870D79 /* Wrappers.cpp in Sources */,
 				C18C113E1BFA9B900013DD03 /* GenericDriver.mm in Sources */,
 				F451166A6C72528F3F009F6C /* Expression.cpp in Sources */,
