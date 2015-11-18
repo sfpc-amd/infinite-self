@@ -7,6 +7,8 @@ Identity is fluid.
 
 ## Deploying to Mac Mini
 
+The deploy script will make a backup of the current version on the Mac Mini and then `rsync` over whatever is currently in the "data" directory.
+
 ```bash
 ./scripts/deploy.sh
 ```
