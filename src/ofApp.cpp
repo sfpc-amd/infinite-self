@@ -34,22 +34,19 @@ void ofApp::setup(){
         cam.setLed(false);
     #endif
     cam.initGrabber(640, 480);
-    
-//    camShader.setupShaderFromFile(GL_FRAGMENT_SHADER, "shaders/cam.frag");
-//    camShader.linkProgram();
 
     camShader.load("shaders/cam");
    
     tracker.setup();
 	ofFbo::Settings settings;
-	settings.width = cam.getWidth();
-	settings.height = cam.getHeight();
+	settings.width = imageWidth;
+	settings.height = imageHeight;
 	maskFbo.allocate(settings);
 	srcFbo.allocate(settings);
     camFbo.allocate(settings);
-    clone.setup(cam.getWidth(), cam.getHeight());
+    clone.setup(imageWidth, imageHeight);
 
-    ofSetWindowShape(cam.getWidth(), cam.getHeight());
+    ofSetWindowShape(imageWidth, imageHeight);
     
     imagesDir.open(imagesDirPath);
     imagesDir.allowExt("jpg");
@@ -86,7 +83,14 @@ void ofApp::update(){
     
         cam.update();
         if(cam.isFrameNew()) {
-            tracker.update(ofxCv::toCv(cam));
+        
+            // there must be a more efficient way to do this!
+            squareImg.setFromPixels(cam.getPixels(), cam.getWidth(), cam.getHeight(), OF_IMAGE_COLOR);
+            squareImg.crop((640-480)/2, 0, 480, 480);
+            squareImg.resize(imageWidth, imageHeight);
+            
+            
+            tracker.update(ofxCv::toCv(squareImg));
             
             cloneReady = tracker.getFound();
             
@@ -96,8 +100,8 @@ void ofApp::update(){
                     camFbo.begin();
                         ofClear(0, 255);
                         camShader.begin();
-                            camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
-                            cam.draw(0,0);
+                            camShader.setUniformTexture("tex", squareImg.getTextureReference(), 1);
+                            squareImg.draw(0, 0);
                         camShader.end();
                     camFbo.end();
                     srcImageFound = true;

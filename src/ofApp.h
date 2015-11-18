@@ -54,6 +54,7 @@ class ofApp : public ofBaseApp{
         #else
             ofVideoGrabber cam;
         #endif
+        ofImage squareImg;
     
         ofxFaceTrackerThreaded tracker;
         ofVec2f position;
