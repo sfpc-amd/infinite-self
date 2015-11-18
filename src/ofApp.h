@@ -9,7 +9,7 @@
 
 #include "Clone.h"
 
-//#define USE_MACAM
+#define USE_MACAM
 
 #ifdef USE_MACAM
 #include "ofxMacamPs3Eye.h"
