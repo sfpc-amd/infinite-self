@@ -166,7 +166,7 @@ void ofApp::draw(){
             if(bAlwaysShowCamera) {
                 camFbo.draw(-imageWidth/2, -imageHeight/2);
             } else if (cloneReady) {
-                clone.draw(-854/2, -640/2, 854, 640);
+                clone.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
             } else {
                 avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
             }
