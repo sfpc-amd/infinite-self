@@ -3,13 +3,19 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-	ofSetFrameRate(60);
+	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
     ofEnableSmoothing();
     ofSetLogLevel(OF_LOG_NOTICE);
 
-//    imagesDirPath = ofToDataPath("../../../sharedData/images/selfies-processed-cropped/", true);
+
+    // note that this is outside the project,
+    // will need to provide pre-formatted images
+    // a folder above the project
+    // switch to use sampleImages to test
+//    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
     imagesDirPath = "sampleImages/";
+    
 
     imageHeight = 640;
     imageWidth = 640;
@@ -39,14 +45,14 @@ void ofApp::setup(){
    
     tracker.setup();
 	ofFbo::Settings settings;
-	settings.width = imageWidth;
-	settings.height = imageHeight;
+	settings.width = cam.getWidth();
+	settings.height = cam.getHeight();
 	maskFbo.allocate(settings);
 	srcFbo.allocate(settings);
     camFbo.allocate(settings);
-    clone.setup(imageWidth, imageHeight);
+    clone.setup( cam.getWidth(), cam.getHeight());
 
-    ofSetWindowShape(imageWidth, imageHeight);
+    ofSetWindowShape(cam.getWidth(), cam.getHeight());
     
     imagesDir.open(imagesDirPath);
     imagesDir.allowExt("jpg");
@@ -85,12 +91,12 @@ void ofApp::update(){
         if(cam.isFrameNew()) {
         
             // there must be a more efficient way to do this!
-            squareImg.setFromPixels(cam.getPixels(), cam.getWidth(), cam.getHeight(), OF_IMAGE_COLOR);
-            squareImg.crop((640-480)/2, 0, 480, 480);
-            squareImg.resize(imageWidth, imageHeight);
+//            squareImg.setFromPixels(cam.getPixels(), cam.getWidth(), cam.getHeight(), OF_IMAGE_COLOR);
+//            squareImg.crop((640-480)/2, 0, 480, 480);
+//            squareImg.resize(imageWidth, imageHeight);
             
             
-            tracker.update(ofxCv::toCv(squareImg));
+            tracker.update(ofxCv::toCv(cam));
             
             cloneReady = tracker.getFound();
             
@@ -100,8 +106,8 @@ void ofApp::update(){
                     camFbo.begin();
                         ofClear(0, 255);
                         camShader.begin();
-                            camShader.setUniformTexture("tex", squareImg.getTextureReference(), 1);
-                            squareImg.draw(0, 0);
+                            camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
+                            cam.draw(0, 0);
                         camShader.end();
                     camFbo.end();
                     srcImageFound = true;
@@ -156,8 +162,11 @@ void ofApp::draw(){
         ofPushMatrix();
             ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
         
-            if(cloneReady) {
-                clone.draw(-imageWidth/2, -imageHeight/2);
+        
+            if(bAlwaysShowCamera) {
+                camFbo.draw(-imageWidth/2, -imageHeight/2);
+            } else if (cloneReady) {
+                clone.draw(-854/2, -640/2, 854, 640);
             } else {
                 avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
             }
@@ -213,6 +222,8 @@ void ofApp::keyPressed(int key){
         ofToggleFullscreen();
     } else if (key == 'g') {
         bDrawGui = !bDrawGui;
+    } else if (key == 'c') {
+        bAlwaysShowCamera = !bAlwaysShowCamera;
     }
 }
 

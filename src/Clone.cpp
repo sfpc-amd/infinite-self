@@ -70,3 +70,8 @@ void Clone::update(ofTexture& src, ofTexture& dst, ofTexture& mask) {
 void Clone::draw(float x, float y) {
 	buffer.draw(x, y);
 }
+
+
+void Clone::draw(float x, float y, float w, float h) {
+	buffer.draw(x, y, w, h);
+}

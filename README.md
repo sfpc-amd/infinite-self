@@ -5,6 +5,13 @@ Identity is fluid.
 
 ![infinite-self](infinite-self.mov.gif)
 
+
+## Note
+
+ * In its current state **the app will crash if the ps3Eye isn't plugged in**.
+ * **It takes a long time to load** since all the umages load up front
+
+
 ## Deploying to Mac Mini
 
 The deploy script will make a backup of the current version on the Mac Mini and then `rsync` over whatever is currently in the "data" directory.

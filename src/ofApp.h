@@ -76,6 +76,7 @@ class ofApp : public ofBaseApp{
         bool bDrawGui;
         bool bImagesLoaded;
         bool bImagesStartLoading;
+        bool bAlwaysShowCamera;
     
         deque<ofImage> images;
     
