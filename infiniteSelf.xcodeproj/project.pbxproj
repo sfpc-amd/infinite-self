@@ -233,6 +233,7 @@
 		BE9718AC2BA4516A804EE019 /* CLM.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = CLM.cc; path = ../../../addons/ofxFaceTracker/libs/FaceTracker/src/lib/CLM.cc; sourceTree = SOURCE_ROOT; };
 		C12B2A6F1BFA4EE700D12D27 /* Clone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clone.cpp; sourceTree = "<group>"; };
 		C12B2A701BFA4EE700D12D27 /* Clone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clone.h; sourceTree = "<group>"; };
+		C157F4951BFD25D400BC53CF /* ofxCenteredTrueTypeFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxCenteredTrueTypeFont.h; sourceTree = "<group>"; };
 		C15C15771BEBF5440082F967 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
 		C1605C001BE99FB80041AFB2 /* ofxAutoReloadedShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAutoReloadedShader.cpp; sourceTree = "<group>"; };
 		C1605C011BE99FB80041AFB2 /* ofxAutoReloadedShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAutoReloadedShader.h; sourceTree = "<group>"; };
@@ -748,6 +749,7 @@
 				2B86176FA97BFB2BEE1F2F83 /* ofxFaceTracker */,
 				C1605BFE1BE99FB80041AFB2 /* ofxAutoReloadedShader */,
 				C18C11131BFA9B900013DD03 /* ofxMacamPs3Eye */,
+				C157F4931BFD25D400BC53CF /* ofxCenteredTrueTypeFont */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -779,6 +781,23 @@
 				BBAB23BE13894E4700AA2426 /* GLUT.framework */,
 			);
 			name = "3rd party frameworks";
+			sourceTree = "<group>";
+		};
+		C157F4931BFD25D400BC53CF /* ofxCenteredTrueTypeFont */ = {
+			isa = PBXGroup;
+			children = (
+				C157F4941BFD25D400BC53CF /* src */,
+			);
+			name = ofxCenteredTrueTypeFont;
+			sourceTree = "<group>";
+		};
+		C157F4941BFD25D400BC53CF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				C157F4951BFD25D400BC53CF /* ofxCenteredTrueTypeFont.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxCenteredTrueTypeFont/src;
 			sourceTree = "<group>";
 		};
 		C1605BFE1BE99FB80041AFB2 /* ofxAutoReloadedShader */ = {

@@ -6,10 +6,12 @@
 #include "ofxCv.h"
 #include "ofxFaceTracker.h"
 #include "ofxFaceTrackerThreaded.h"
+#include "ofxCenteredTrueTypeFont.h"
+
 
 #include "Clone.h"
 
-#define USE_MACAM
+//#define USE_MACAM
 
 #ifdef USE_MACAM
 #include "ofxMacamPs3Eye.h"
@@ -37,6 +39,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         vector<ofVec2f> getSrcPoints();
+    
+        ofxCenteredTrueTypeFont font;
     
         Clone clone;
         bool cloneReady;
@@ -79,6 +83,7 @@ class ofApp : public ofBaseApp{
         bool bAlwaysShowCamera;
     
         deque<ofImage> images;
+        vector<string> names;
     
         ofxAutoReloadedShader avgShader;
         ofxAutoReloadedShader camShader;

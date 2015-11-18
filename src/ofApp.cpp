@@ -13,8 +13,8 @@ void ofApp::setup(){
     // will need to provide pre-formatted images
     // a folder above the project
     // switch to use sampleImages to test
-//    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
-    imagesDirPath = "sampleImages/";
+    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
+//    imagesDirPath = "sampleImages/";
     
 
     imageHeight = 640;
@@ -56,6 +56,8 @@ void ofApp::setup(){
     
     imagesDir.open(imagesDirPath);
     imagesDir.allowExt("jpg");
+    
+    font.loadFont("fonts/LetterGothicStd.otf", 34);
 
 
 }
@@ -164,12 +166,20 @@ void ofApp::draw(){
         
         
             if(bAlwaysShowCamera) {
-                camFbo.draw(-imageWidth/2, -imageHeight/2);
+                cam.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
             } else if (cloneReady) {
                 clone.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
+                ofPushMatrix();
+                    ofxCv::applyMatrix(rotationMatrix);
+//                    font.drawStringCentered("@"+names[endIndex], 0, imageHeight/2-50);
+
+                ofPopMatrix();
             } else {
                 avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
+                font.drawStringCentered("@"+names[endIndex], 0, imageHeight/2-50);
             }
+        
+        
         ofPopMatrix();
         
     ///////////////////////////////
@@ -203,6 +213,13 @@ void ofApp::loadImages() {
     images.resize(imagesDir.numFiles());
     
     for(int i = 0; i < imagesDir.numFiles(); i++){
+    
+        string name = imagesDir.getName(i);
+        name.erase(name.end()-8, name.end());
+        names.push_back(name);
+        
+//        cout << "name " << i << " " << name << endl;
+    
         images[i].loadImage(imagesDir.getPath(i));
         if(images[i].getWidth() != imageWidth || images[i].getHeight() != imageHeight) {
             images[i].resize(imageWidth, imageHeight);
