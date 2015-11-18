@@ -5,13 +5,20 @@ Identity is fluid.
 
 ![infinite-self](infinite-self.mov.gif)
 
+## Deploying to Mac Mini
+
+The deploy script will make a backup of the current version on the Mac Mini and then `rsync` over whatever is currently in the "data" directory.
+
+```bash
+./scripts/deploy.sh
+```
 ## Setup
 
 You can install the necessary addons by running the install script:
 
 ```bash
 cd /path/to/app/directory/
-./clone_addons.sh
+./scripts/clone_addons.sh
 ```
 
 ### Addon Dependencies 
@@ -25,6 +32,7 @@ Also, optionally:
  * [ofxMacamPs3Eye](https://github.com/paulobarcelos/ofxMacamPs3Eye)
 
 (uncomment `#define USE_MACAM` in `ofApp.h` if you plan to use the ps3Eye)
+
 
 
 ## Release Notes
