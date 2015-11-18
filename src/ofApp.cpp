@@ -150,26 +150,18 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofClear(0);
+	ofSetColor(255);
     
     if(bImagesLoaded) {
-//        avgFbo.draw(0, 0);
-
-
-	ofSetColor(255);
-	
-	if(cloneReady) {
-		clone.draw(0, 0);
-	} else {
-		cam.draw(0, 0);
-	}
-	
-	if(!tracker.getFound()) {
-//        ofDrawBitmapStringHighlight("camera face not found", 10, 10);
         ofPushMatrix();
             ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
-            avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
+        
+            if(cloneReady) {
+                clone.draw(-imageWidth/2, -imageHeight/2);
+            } else {
+                avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
+            }
         ofPopMatrix();
-	}
         
     ///////////////////////////////
         startIndex++;
