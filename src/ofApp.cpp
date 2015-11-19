@@ -13,8 +13,8 @@ void ofApp::setup(){
     // will need to provide pre-formatted images
     // a folder above the project
     // switch to use sampleImages to test
-//    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
-    imagesDirPath = "sampleImages/";
+    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
+//    imagesDirPath = "sampleImages/";
     
 
     imageHeight = 640;
@@ -22,6 +22,8 @@ void ofApp::setup(){
     totalImages = 10;
     startIndex = 0;
     endIndex = totalImages;
+    snapshotFrameCount = 0;
+    srcImageFound = false;
 
     avgShader.load("shaders/avg");
     avgFbo.allocate(imageHeight, imageWidth);
@@ -34,6 +36,8 @@ void ofApp::setup(){
     gui.setup();
     gui.add(dMultiply.setup("Displacement", 0.3, 0.0, 10.0));
     gui.add(cloneStrength.setup("Clone Strength", 16, 0, 50));
+    gui.add(snapshotFrames.setup("Snapshot frames", 150, 0, 1000));
+
    
     #ifdef USE_MACAM
         cam.setDesiredFrameRate(30);
@@ -69,75 +73,40 @@ void ofApp::update(){
         srcPoints = getSrcPoints();
     } else {
     
-        avgFbo.begin();
-            avgShader.begin();
-                avgShader.setUniform1f("dMultiply", dMultiply);
-                avgShader.setUniform2f("direction",
-                    ofMap(mouseX, 0, ofGetWidth(), -1, 1, true),
-                    ofMap(mouseY, 0, ofGetHeight(), -1, 1, true)
-                );
-
-                 for(int j=0; j < totalImages; j++) {
-                    string name = "tex"+ofToString(j+1);
-                    int index = startIndex+j+1;
-                    avgShader.setUniformTexture(name, images[index].getTextureReference(), j+1);
-                  }
-
-                images[startIndex].draw(0, 0);
-            avgShader.end();
-        avgFbo.end();
-       
-        
     
+        // manage our timer for the source image
+        // this can be added to updateSrcImage eventually
+        if(srcImageFound) {
+            if(snapshotFrameCount > snapshotFrames) {
+                snapshotFrameCount = 0;
+                srcImageFound = false;
+            } else {
+                snapshotFrameCount++;
+            }
+        }
+        
+        updateImageAverage();
+        
         cam.update();
         if(cam.isFrameNew()) {
+        
+            // if we don't already have a source image set
+            if(!srcImageFound) {
 
-            tracker.update(ofxCv::toCv(cam));
-            
-            cloneReady = tracker.getFound();
-            
-            if(cloneReady) {
+                tracker.update(ofxCv::toCv(cam));
                 
-                if(!srcImageFound) {
-                    camFbo.begin();
-                        ofClear(0, 255);
-                            camShader.begin();
-                                    cam.draw(0, 0);
-                            camShader.end();
-                        ofPopMatrix();
-                    camFbo.end();
-                    srcImageFound = true;
-                    
-                    camMesh = tracker.getImageMesh();
-                    camMesh.clearTexCoords();
-                    camMesh.addTexCoords(srcPoints);
+                if(tracker.getFound()) {
+                    // this will set srcImagFound to true
+                    srcImageFound = updateSrcImage();
+
                 }
                 
-                maskFbo.begin();
-                    ofClear(0, 255);
-                    camMesh.draw();
-                maskFbo.end();
+                cout << "SOURCE IMAGE FOUND: " << srcImageFound << endl;
                 
-                srcFbo.begin();
-                    ofClear(0, 255);
-                    avgFbo.getTextureReference().bind();
-                    camMesh.draw();
-                    avgFbo.getTextureReference().unbind();
-                srcFbo.end();
-
-//                camFbo.begin();
-//                    ofClear(0, 255);
-//                    camShader.begin();
-//                        camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
-//                        cam.draw(0,0);
-//                    camShader.end();
-//                camFbo.end();
-                
-                clone.setStrength(cloneStrength);
-                clone.update(srcFbo.getTextureReference(), camFbo.getTextureReference(), maskFbo.getTextureReference());
+                updateClone();
                 
             } else {
-                srcImageFound = false;
+                updateClone();
             }
         }
     }
@@ -156,7 +125,7 @@ void ofApp::draw(){
         
             if(bAlwaysShowCamera) {
                 cam.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
-            } else if (cloneReady) {
+            } else if (srcImageFound) {
                 clone.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
             } else {
                 avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
@@ -165,27 +134,99 @@ void ofApp::draw(){
         
         ofPopMatrix();
         
-        startIndex++;
-        endIndex++;
-
-        if(endIndex >= images.size()-1) {
-            startIndex = 0;
-            endIndex = totalImages;
-        }
     
         if(bDrawGui) {
             gui.draw();
             ofDrawBitmapString(ofToString(startIndex) + " / " + ofToString(ofGetFrameRate()), 5, ofGetHeight()-5);
         }
-    } else {
-        ofDrawBitmapString("Loading", ofGetWidth()/2, ofGetHeight()/2);
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
     // correctly cload out face tracker thread
-    tracker.waitForThread();
+//    tracker.waitForThread();
+}
+
+void ofApp::updateImageAverage() {
+    avgFbo.begin();
+        avgShader.begin();
+            avgShader.setUniform1f("dMultiply", dMultiply);
+            avgShader.setUniform2f("direction",
+                ofMap(mouseX, 0, ofGetWidth(), -1, 1, true),
+                ofMap(mouseY, 0, ofGetHeight(), -1, 1, true)
+            );
+
+             for(int j=0; j < totalImages; j++) {
+                string name = "tex"+ofToString(j+1);
+                int index = startIndex+j+1;
+                avgShader.setUniformTexture(name, images[index].getTextureReference(), j+1);
+              }
+
+            images[startIndex].draw(0, 0);
+        avgShader.end();
+    avgFbo.end();
+    
+    // update index iterator
+    if(endIndex >= images.size()-1) {
+        startIndex = 0;
+        endIndex = totalImages;
+    } else {
+        startIndex++;
+        endIndex++;
+    }
+}
+
+bool ofApp::updateSrcImage() {
+
+
+    // update the camera fbo
+    camFbo.begin();
+        ofClear(0, 255);
+            camShader.begin();
+                    cam.draw(0, 0);
+            camShader.end();
+        ofPopMatrix();
+    camFbo.end();
+
+//    srcImage.setFromPixels(cam.getPixels(), cam.getWidth(), cam.getHeight(), OF_IMAGE_COLOR);
+
+    // update the camera mesh from the source image
+    camMesh = tracker.getImageMesh();
+    camMesh.clearTexCoords();
+    camMesh.addTexCoords(srcPoints);
+
+    
+    cout << "UPDATE CAM MESH" << endl;
+    
+
+    
+    // set our image found property to true
+    return true;
+}
+
+void ofApp::updateClone() {
+
+    cout << "UPDATE CLONE" << endl;
+
+    // update masking fbo from camera mesh
+    maskFbo.begin();
+        ofClear(0, 255);
+        camMesh.draw();
+    maskFbo.end();
+    
+    
+    // update source image fbo from averaged image
+    srcFbo.begin();
+        ofClear(0, 255);
+        avgFbo.getTextureReference().bind();
+        camMesh.draw();
+        avgFbo.getTextureReference().unbind();
+    srcFbo.end();
+
+    // update clone
+    clone.setStrength(cloneStrength);
+    clone.update(srcFbo.getTextureReference(), camFbo.getTextureReference(), maskFbo.getTextureReference());
 }
 
 

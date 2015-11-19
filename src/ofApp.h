@@ -11,7 +11,7 @@
 
 #include "Clone.h"
 
-//#define USE_MACAM
+#define USE_MACAM
 
 #ifdef USE_MACAM
 #include "ofxMacamPs3Eye.h"
@@ -27,7 +27,10 @@ class ofApp : public ofBaseApp{
     
         vector<ofVec2f> getSrcPoints();
         void loadImages();
-
+        void updateImageAverage();
+        bool updateSrcImage();
+        void updateClone();
+    
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -43,13 +46,13 @@ class ofApp : public ofBaseApp{
         bool bImagesLoaded;
         bool bImagesStartLoading;
         bool bAlwaysShowCamera;
-        bool cloneReady;
         bool srcImageFound;
 
         // basic configuration
         float imageHeight;
         float imageWidth;
         int totalImages;
+        int snapshotFrameCount;
 
         // camera input
         #ifdef USE_MACAM
@@ -67,7 +70,7 @@ class ofApp : public ofBaseApp{
         ofxAutoReloadedShader camShader;
     
         // face replacement & tracking stuff
-        ofxFaceTrackerThreaded tracker;
+        ofxFaceTracker tracker;
         Clone clone;
         vector<ofVec2f> srcPoints;
         ofImage srcImage;
@@ -86,7 +89,8 @@ class ofApp : public ofBaseApp{
         ofxPanel gui;
         ofxFloatSlider dMultiply;
         ofxIntSlider cloneStrength;
-    
+        ofxIntSlider snapshotFrames;
+   
         // display
         ofxCenteredTrueTypeFont font;
 
