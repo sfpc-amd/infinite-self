@@ -13,8 +13,8 @@ void ofApp::setup(){
     // will need to provide pre-formatted images
     // a folder above the project
     // switch to use sampleImages to test
-    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
-//    imagesDirPath = "sampleImages/";
+//    imagesDirPath = ofToDataPath("../../../sharedData/images/selfie/", true);
+    imagesDirPath = "sampleImages/";
     
 
     imageHeight = 640;
@@ -34,12 +34,14 @@ void ofApp::setup(){
     gui.setup();
     gui.add(dMultiply.setup("Displacement", 0.3, 0.0, 10.0));
     gui.add(cloneStrength.setup("Clone Strength", 16, 0, 50));
-    
+    gui.add(flipVert.setup("Flip Vertically", true));
+   
     #ifdef USE_MACAM
         cam.setDesiredFrameRate(30);
         cam.setLed(false);
     #endif
     cam.initGrabber(640, 480);
+    flipped.allocate(cam.getWidth(), cam.getHeight(), OF_IMAGE_COLOR);
 
     camShader.load("shaders/cam");
    
@@ -107,10 +109,19 @@ void ofApp::update(){
                 if(!srcImageFound) {
                     camFbo.begin();
                         ofClear(0, 255);
-                        camShader.begin();
-                            camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
-                            cam.draw(0, 0);
-                        camShader.end();
+
+                            camShader.begin();
+    //                            camShader.setUniformTexture("tex", cam.getTextureReference(), 1);
+                                ofPushMatrix();
+                                    if(flipVert) {
+                                        ofTranslate(0, cam.getHeight()/2);
+                                        ofScale(1,-1,1);
+                                        ofTranslate(0, -cam.getHeight()/2);
+                                    }
+                                    cam.draw(0, 0);
+                                ofPopMatrix();
+                            camShader.end();
+                        ofPopMatrix();
                     camFbo.end();
                     srcImageFound = true;
                     
@@ -166,7 +177,7 @@ void ofApp::draw(){
         
         
             if(bAlwaysShowCamera) {
-                cam.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
+                camFbo.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
             } else if (cloneReady) {
                 clone.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
                 ofPushMatrix();

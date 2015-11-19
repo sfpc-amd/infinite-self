@@ -11,7 +11,7 @@
 
 #include "Clone.h"
 
-//#define USE_MACAM
+#define USE_MACAM
 
 #ifdef USE_MACAM
 #include "ofxMacamPs3Eye.h"
@@ -52,6 +52,8 @@ class ofApp : public ofBaseApp{
         ofImage srcImage;
         bool srcImageFound;
         ofMesh camMesh;
+        ofImage flipped;
+
     
         #ifdef USE_MACAM
             ofxMacamPs3Eye cam;
@@ -72,6 +74,7 @@ class ofApp : public ofBaseApp{
         ofxPanel gui;
         ofxFloatSlider dMultiply;
         ofxIntSlider cloneStrength;
+        ofxToggle flipVert;
     
         float imageHeight;
         float imageWidth;
