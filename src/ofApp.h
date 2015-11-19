@@ -11,7 +11,7 @@
 
 #include "Clone.h"
 
-#define USE_MACAM
+//#define USE_MACAM
 
 #ifdef USE_MACAM
 #include "ofxMacamPs3Eye.h"
@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
 		void draw();
         void exit();
     
-    
+        vector<ofVec2f> getSrcPoints();
         void loadImages();
 
 		void keyPressed(int key);
@@ -37,63 +37,57 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
-        vector<ofVec2f> getSrcPoints();
-    
-        ofxCenteredTrueTypeFont font;
-    
-        Clone clone;
-        bool cloneReady;
-        vector<ofVec2f> srcPoints;
-        ofFbo srcFbo, maskFbo, camFbo;
-    
-        string imagesDirPath;
-        ofDirectory imagesDir;
-        ofImage srcImage;
-        bool srcImageFound;
-        ofMesh camMesh;
-        ofImage flipped;
 
-    
-        #ifdef USE_MACAM
-            ofxMacamPs3Eye cam;
-        #else
-            ofVideoGrabber cam;
-        #endif
-        ofImage squareImg;
-    
-        ofxFaceTrackerThreaded tracker;
-        ofVec2f position;
-        float scale;
-        ofVec3f orientation;
-        ofMatrix4x4 rotationMatrix;
-        
-        ofxCv::Mat translation, rotation;
-        ofMatrix4x4 pose;
-
-        ofxPanel gui;
-        ofxFloatSlider dMultiply;
-        ofxIntSlider cloneStrength;
-        ofxToggle flipVert;
-    
-        float imageHeight;
-        float imageWidth;
-        int totalImages;
-
+        // flags
         bool bDrawGui;
         bool bImagesLoaded;
         bool bImagesStartLoading;
         bool bAlwaysShowCamera;
+        bool cloneReady;
+        bool srcImageFound;
+
+        // basic configuration
+        float imageHeight;
+        float imageWidth;
+        int totalImages;
+
+        // camera input
+        #ifdef USE_MACAM
+        ofxMacamPs3Eye cam;
+        #else
+        ofVideoGrabber cam;
+        #endif
     
-        deque<ofImage> images;
-        vector<string> names;
-    
+        // fbos and shaders
+        ofFbo srcFbo;
+        ofFbo maskFbo;
+        ofFbo camFbo;
+        ofFbo avgFbo;
         ofxAutoReloadedShader avgShader;
         ofxAutoReloadedShader camShader;
-        ofFbo avgFbo;
     
+        // face replacement & tracking stuff
+        ofxFaceTrackerThreaded tracker;
+        Clone clone;
+        vector<ofVec2f> srcPoints;
+        ofImage srcImage;
+        ofMesh camMesh;
     
-    private:
+        // image loading
+        // @todo: separate class?
+        string imagesDirPath;
+        ofDirectory imagesDir;
+        deque<ofImage> images;
+        vector<string> names;
         int startIndex;
         int endIndex;
+
+        // gui panel
+        ofxPanel gui;
+        ofxFloatSlider dMultiply;
+        ofxIntSlider cloneStrength;
+    
+        // display
+        ofxCenteredTrueTypeFont font;
+
 };
