@@ -44,6 +44,9 @@ Also, optionally:
 
 ## Release Notes
 
+### 1.0.1
+- Hide cursor in full screen mode
+
 ### 1.0.0
  - This is what was used for the show launch
  - Added username text

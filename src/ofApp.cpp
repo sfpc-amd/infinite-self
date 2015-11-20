@@ -24,6 +24,7 @@ void ofApp::setup(){
     endIndex = totalImages;
     snapshotFrameCount = 0;
     srcImageFound = false;
+    isFullscreen = false;
 
     avgShader.load("shaders/avg");
     avgFbo.allocate(imageHeight, imageWidth);
@@ -302,7 +303,13 @@ vector<ofVec2f> ofApp::getSrcPoints() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key == 'f') {
-        ofToggleFullscreen();
+        isFullscreen = !isFullscreen;
+        ofSetFullscreen(isFullscreen);
+        if(isFullscreen) {
+            ofHideCursor();
+        } else {
+            ofShowCursor();
+        }
     } else if (key == 'g') {
         bDrawGui = !bDrawGui;
     } else if (key == 'c') {

@@ -47,6 +47,7 @@ class ofApp : public ofBaseApp{
         bool bImagesStartLoading;
         bool bAlwaysShowCamera;
         bool srcImageFound;
+        bool isFullscreen;
 
         // basic configuration
         float imageHeight;
