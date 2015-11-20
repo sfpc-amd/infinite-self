@@ -44,6 +44,11 @@ Also, optionally:
 
 ## Release Notes
 
+### 1.0.0
+ - This is what was used for the show launch
+ - Added username text
+ - Set face tracking to show video (no photo booth mode)
+
 ### 0.2.0
 
  - Added face replacement
