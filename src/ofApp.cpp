@@ -91,23 +91,28 @@ void ofApp::update(){
         if(cam.isFrameNew()) {
         
             // if we don't already have a source image set
-            if(!srcImageFound) {
+//            if(!srcImageFound) {
 
                 tracker.update(ofxCv::toCv(cam));
-                
-                if(tracker.getFound()) {
+            
+                srcImageFound = tracker.getFound();
+            
+//                if(tracker.getFound()) {
                     // this will set srcImagFound to true
-                    srcImageFound = updateSrcImage();
+//                    srcImageFound = updateSrcImage();
 
+//                }
+                if(srcImageFound) {
+                    updateSrcImage();
+                    
+                    cout << "SOURCE IMAGE FOUND: " << srcImageFound << endl;
+                    
+                    updateClone();
                 }
                 
-                cout << "SOURCE IMAGE FOUND: " << srcImageFound << endl;
-                
-                updateClone();
-                
-            } else {
-                updateClone();
-            }
+//            } else {
+//                updateClone();
+//            }
         }
     }
     
@@ -127,6 +132,8 @@ void ofApp::draw(){
                 cam.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
             } else if (srcImageFound) {
                 clone.draw(-cam.getWidth()/2, -cam.getHeight()/2, cam.getWidth(), cam.getHeight());
+                font.drawStringCentered("@"+names[endIndex], 0, cam.getHeight()/2-50);
+
             } else {
                 avgFbo.draw(-avgFbo.getWidth()/2, -avgFbo.getHeight()/2);
                 font.drawStringCentered("@"+names[endIndex], 0, imageHeight/2-50);

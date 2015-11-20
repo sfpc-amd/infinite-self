@@ -70,7 +70,7 @@ class ofApp : public ofBaseApp{
         ofxAutoReloadedShader camShader;
     
         // face replacement & tracking stuff
-        ofxFaceTracker tracker;
+        ofxFaceTrackerThreaded tracker;
         Clone clone;
         vector<ofVec2f> srcPoints;
         ofImage srcImage;
